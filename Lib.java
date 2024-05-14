@@ -5,8 +5,6 @@ public class Lib {
   public static HashMap<String, Integer> chooseActivities(String name, String cabin) {
     HashMap<String, Integer> choices = new HashMap<String, Integer>();
 
-    Scanner intInput = new Scanner(System.in);
-    
     boolean reset = true;
 
     ArrayList<String> choice_options = new ArrayList<String>(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8"));
@@ -26,19 +24,20 @@ public class Lib {
           System.out.println(i + 1 + ". " + activity_list[i] + "  " + choices.get((activity_list[i])));
         }
       }
-      System.out.print(choice_selection + 1 + ". " + activity_list[choice_selection] + "  ");
 
       int choice = 0;
 
+      Scanner strInput = new Scanner(System.in);
+
+      System.out.print(choice_selection + 1 + ". " + activity_list[choice_selection] + "  ");
+
+
       try {
-        choice = intInput.nextInt();
-      }
-      catch (InputMismatchException e) {
-        System.out.println("Invalid Input");
-        continue;
+        String choice_str = strInput.next();
+        choice = Integer.valueOf(choice_str);
       }
       catch (Exception e) {
-        e.printStackTrace();
+        System.out.println("Invalid Input");
         continue;
       }
 
@@ -64,6 +63,7 @@ public class Lib {
     }
     return choices;
   } 
+
   public static Camper selectCamper(ArrayList<Camper> campers) {
     Scanner intInput = new Scanner(System.in);
     
@@ -235,13 +235,82 @@ public class Lib {
     return satisfaction_scores;
   }
 
-  public static void save(String file_name, ArrayList<Camper> campers, ArrayList<Activity> activities) {
-    File save_file = new File ("Saves/" + file_name);
+  public static void save(String file_name, ArrayList<Camper> campers) {
+    String[] activity_list = new String[]{"Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"};
+    
+    File camper_folder = new File("Saves/" + file_name + "/Campers");
+    
+    File[] camper_files = camper_folder.listFiles();
 
-    FileWriter writer = new FileWriter(save_file);
+    for (File file : camper_files) {
+      file.delete(); //deletes all campers from folder
+    }
+    
+    try {
+      for (Camper camper : campers) {
+        File camper_file = new File ("Saves/" + file_name + "/Campers/C" + campers.indexOf(camper) + ".txt");
+        camper_file.createNewFile();
 
-    writer.write("text");
+        FileWriter writer = new FileWriter(camper_file);
 
-    writer.close();
+        writer.write("Name: "+ camper.name + "\n");
+        writer.write("Cabin: " + camper.cabin + "\n");
+
+        writer.write("Choices: ");
+
+        for (String activity_name : activity_list) {
+          writer.write(activity_name + ":" + camper.choices.get(activity_name) + ", ");
+        }
+
+        writer.close();
+      }
+      
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static ArrayList<Camper> load(String file_name) {
+    String[] activity_list = new String[]{"Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"};
+
+    ArrayList<Camper> campers = new ArrayList<Camper>();
+    try {
+      File camper_folder = new File ("Saves/" + file_name + "/Campers");
+
+      File[] camper_list = camper_folder.listFiles();
+
+      for (int i = 0; i < camper_list.length; i++) {
+        File camper_file = camper_list[i];
+
+        Scanner fileReader = new Scanner(camper_file);
+
+        String name = fileReader.nextLine().split(": ")[1];
+        String cabin = fileReader.nextLine().split(": ")[1];
+
+        String choice_values = fileReader.nextLine().split(": ")[1];
+        String[] choice_array = choice_values.split(", ");
+
+        HashMap<String, Integer> choices = new HashMap<String, Integer>();
+
+        for (int ii = 0; ii < choice_array.length; ii++) {
+          String[] choice_mapping = choice_array[ii].split(":");
+          choices.put(choice_mapping[0], Integer.valueOf(choice_mapping[1]));
+        }
+
+        Camper new_camper = new Camper(name, cabin);
+
+        for (String activity : activity_list) {
+          new_camper.setChoice(activity, choices.get(activity));
+        }
+
+        campers.add(new_camper);
+
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    return campers;
   }
 }

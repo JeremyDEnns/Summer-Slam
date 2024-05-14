@@ -236,6 +236,12 @@ public class Lib {
   }
 
   public static void save(String file_name, ArrayList<Camper> campers, ArrayList<Activity> activities) {
-    
+    File save_file = new File ("Saves/" + file_name);
+
+    FileWriter writer = new FileWriter(save_file);
+
+    writer.write("text");
+
+    writer.close();
   }
 }

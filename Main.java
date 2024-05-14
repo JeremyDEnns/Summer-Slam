@@ -19,8 +19,10 @@ public class Main {
     }
 
     String mode = "manual";
+
+    String fileName = "file";
     
-    if (false) {
+    if (true) {
       System.out.println("\n1. Open from file");
       System.out.println("2. Create new\n");
   
@@ -30,7 +32,7 @@ public class Main {
     
         if (choice.equals("1")) { //open exiisting file
           System.out.print("Enter file name: ");
-          String fileName = strInput.nextLine();
+          fileName = strInput.nextLine();
           try {
             File savesFolder = new File("Saves");
     
@@ -43,7 +45,7 @@ public class Main {
   
               System.out.println("Loading campers...");
   
-              //load campers
+              campers = Lib.load(fileName);
   
               for (int i = 0; i < 7; i++) {
                 System.out.print(String.format("\033[%dA",1)); // Move up
@@ -63,11 +65,15 @@ public class Main {
         }
         else if (choice.equals("2")) { //create new file
           System.out.print("create file name (name may not contain '/'): ");
-          String fileName = strInput.nextLine();
+          fileName = strInput.nextLine();
           try {
             save_file = new File("Saves/" + fileName);
             if (!save_file.exists()) {
               save_file.mkdir();
+              File camper_folder = new File("Saves/" + fileName + "/Campers");
+              camper_folder.mkdir();
+              File activity_folder = new File("Saves/" + fileName + "/Activities");
+              activity_folder.mkdir();
               break;
             }
             else {
@@ -144,6 +150,7 @@ public class Main {
     
             if (!choice.equals("2")) {
               campers.add(camper);
+              Lib.save(fileName, campers);
               System.out.println("");
               break;
             }
@@ -166,6 +173,7 @@ public class Main {
               break;
             }
           }
+          Lib.save(fileName, campers);
         }
         else if (action.equals("remove")) {
           Camper camper_choice = Lib.selectCamper(campers);
@@ -176,6 +184,7 @@ public class Main {
           if (confirm.equals("y")) {
             campers.remove(camper_choice);
           }
+          Lib.save(fileName, campers);
         }
         else if (action.equals("assign")) {
           Assign Activity_assigner = new Assign(campers, activities);

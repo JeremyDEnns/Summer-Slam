@@ -346,7 +346,6 @@ public class Assign {
   }
 
   public void assignActivities () {
-    HashMap<String, ArrayList<ArrayList<Camper>>> activity_assignments = new HashMap<String, ArrayList<ArrayList<Camper>>>();
 
     limitedDayAssignments(1);
 
@@ -364,5 +363,62 @@ public class Assign {
       nextChoices();
     }
     
+  }
+
+  public static void display(ArrayList<Camper> campers, ArrayList<Activity> activities) {
+    System.out.println("Activity List:\n");
+
+    String red_code = "\u001B[31m";
+    String blue_code = "\u001B[34m";
+    String green_code = "\u001B[32m";
+    String reset_code = "\u001B[0m";
+
+    for (Activity activity : activities) {
+      System.out.println(green_code + activity.name + reset_code + "\n");
+
+      System.out.print(blue_code);
+      System.out.printf("%-29s %-29s %-29s %-29s %n %n", "Monday", "Tuesday", "Wednesday", "Thursday");
+      System.out.print(reset_code);
+
+      int max = Lib.maxCampers(activity.campers);
+
+      for (int i = 0; i < max; i++) {
+        for (int ii = 0; ii < 4; ii++) {
+          if (i < activity.campers.get(ii).size()) {
+            System.out.printf("%-30s", " " + activity.campers.get(ii).get(i).name);
+          }
+          else if (i == 0) {
+            System.out.printf("%-39s", red_code + " Closed" + reset_code);
+          }
+          else {
+            System.out.printf("%-30s", "");
+          }
+        }
+        System.out.println();
+      }
+      System.out.println();
+    }
+
+    System.out.println("Camper list:\n");
+
+    ArrayList<String> cabins = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux-Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
+
+    for (String cabin : cabins) {
+      System.out.println(green_code + cabin + reset_code + "\n");
+
+      System.out.print(blue_code);
+
+      System.out.printf("%-30s %-20s %-20s %-20s %-20s %n", "", "Monday", "Tuesday", "Wednesday", "Thursday");
+
+      System.out.print(reset_code);
+
+      for (Camper camper : campers) {
+        if (camper.cabin.equals(cabin)) {
+          System.out.printf("%-30s %-20s %-20s %-20s %-20s %n", camper.name, camper.activities.get(0).name, camper.activities.get(1).name, camper.activities.get(2).name, camper.activities.get(3).name);
+        }
+      }
+      System.out.println();
+    }
+
   }
 }

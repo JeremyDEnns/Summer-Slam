@@ -399,9 +399,9 @@ public class Assign {
       System.out.println();
     }
 
-    System.out.println("Camper list:\n");
+    System.out.println("\nCamper list:\n");
 
-    ArrayList<String> cabins = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux-Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
+    ArrayList<String> cabins = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
 
     for (String cabin : cabins) {
       System.out.println(green_code + cabin + reset_code + "\n");
@@ -420,5 +420,108 @@ public class Assign {
       System.out.println();
     }
 
+  }
+
+  public static void saveAssignments (String fileName, ArrayList<Camper> campers, ArrayList<Activity> activities) {
+
+    try {
+      File activity_file = new File("");
+
+      int file_num = 0;
+
+      while (true) { //creates
+        String file_name = "Saves/" + fileName + "/Activity_list";
+        if (file_num > 0) {
+          file_name += file_num;
+        }
+        file_name += ".txt";
+
+        activity_file = new File(file_name);
+
+        if (activity_file.exists()) {
+          file_num++;
+        }
+        else {
+          activity_file.createNewFile();
+          break;
+        }
+      }
+
+      PrintWriter writer = new PrintWriter(activity_file);
+
+      for (Activity activity : activities) {
+        writer.write(activity.name + "\n\n");
+
+        writer.printf("%-29s %-29s %-29s %-29s %n %n", "Monday", "Tuesday", "Wednesday", "Thursday");
+
+        int max = Lib.maxCampers(activity.campers);
+
+        for (int i = 0; i < max; i++) {
+          for (int ii = 0; ii < 4; ii++) {
+            if (i < activity.campers.get(ii).size()) {
+              writer.printf("%-30s", " " + activity.campers.get(ii).get(i).name);
+            }
+            else if (i == 0) {
+              writer.printf("%-30s", " Closed");
+            }
+            else {
+              writer.printf("%-30s", "");
+            }
+          }
+          writer.println();
+        }
+        writer.println("\n");
+      }
+      writer.close();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+
+    try {
+      File camper_file = new File("");
+
+      int file_num = 0;
+
+      while (true) { //creates
+        String file_name = "Saves/" + fileName + "/Camper_list";
+        if (file_num > 0) {
+          file_name += file_num;
+        }
+        file_name += ".txt";
+
+        camper_file = new File(file_name);
+
+        if (camper_file.exists()) {
+          file_num++;
+        }
+        else {
+          camper_file.createNewFile();
+          break;
+        }
+      }
+
+      PrintWriter writer = new PrintWriter(camper_file);
+
+      ArrayList<String> cabins = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
+
+      for (String cabin : cabins) {
+        writer.println(cabin + "\n");
+
+        writer.printf("%-30s %-20s %-20s %-20s %-20s %n", "Name:", "Monday", "Tuesday", "Wednesday", "Thursday");
+
+        for (Camper camper : campers) {
+          if (camper.cabin.equals(cabin)) {
+            writer.printf("%-30s %-20s %-20s %-20s %-20s %n", camper.name, camper.activities.get(0).name, camper.activities.get(1).name, camper.activities.get(2).name, camper.activities.get(3).name);
+          }
+        }
+        writer.println("\n");
+      }
+      writer.close();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

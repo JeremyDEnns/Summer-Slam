@@ -313,4 +313,28 @@ public class Lib {
     }
     return campers;
   }
+
+  public static String capitalize (String text) {
+    String new_text = "";
+    String[] words = text.split(" ");
+    for (int i = 0; i < words.length; i++) {
+      new_text += words[i].substring(0, 1).toUpperCase();
+      new_text += words[i].substring(1).toLowerCase();
+      if (i < words.length - 1) {
+        new_text += " ";
+      }
+    }
+
+    return new_text;
+  }
+
+  public static int maxCampers (ArrayList<ArrayList<Camper>> list) {
+    int max = 0;
+    for (int i = 0; i < list.size(); i++) {
+      if (list.get(i).size() > max) {
+        max = list.get(i).size();
+      }
+    }
+    return max;
+  }
 }

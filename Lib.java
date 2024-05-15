@@ -1,5 +1,4 @@
 import java.util.*;
-import java.io.*;
 
 public class Lib {
   public static HashMap<String, Integer> chooseActivities(String name, String cabin) {

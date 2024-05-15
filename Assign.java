@@ -387,7 +387,7 @@ public class Assign {
           if (i < activity.campers.get(ii).size()) {
             System.out.printf("%-30s", " " + activity.campers.get(ii).get(i).name);
           }
-          else if (i == 0) {
+          else if (i == 0 && activity.days_open[ii] == false) {
             System.out.printf("%-39s", red_code + " Closed" + reset_code);
           }
           else {
@@ -461,7 +461,7 @@ public class Assign {
             if (i < activity.campers.get(ii).size()) {
               writer.printf("%-30s", " " + activity.campers.get(ii).get(i).name);
             }
-            else if (i == 0) {
+            else if (i == 0 && activity.days_open[ii] == false) {
               writer.printf("%-30s", " Closed");
             }
             else {

@@ -11,6 +11,17 @@ public class Main {
     ArrayList<Activity> activities = new ArrayList<Activity>();
 
     File save_file = new File("");
+
+    try {
+      File save_folder = new File("Saves");
+
+      if (!save_folder.exists()) {
+        save_folder.mkdir();
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
     
     String[] activity_list = {"Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"};
 
@@ -217,7 +228,8 @@ public class Main {
           Lib.save(fileName, campers);
         }
         else if (action.equals("assign")) {
-          Assign Activity_assigner = new Assign(campers, activities);
+          new Assign(campers, activities);
+          Assign.display(campers, activities);
           break;
         }
       }

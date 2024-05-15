@@ -408,7 +408,7 @@ public class Assign {
 
       System.out.print(blue_code);
 
-      System.out.printf("%-30s %-20s %-20s %-20s %-20s %n", "", "Monday", "Tuesday", "Wednesday", "Thursday");
+      System.out.printf("%-30s %-20s %-20s %-20s %-20s %n", "Name:", "Monday", "Tuesday", "Wednesday", "Thursday");
 
       System.out.print(reset_code);
 

@@ -24,13 +24,14 @@ public class Main {
     
     if (true) {
       System.out.println("\n1. Open from file");
-      System.out.println("2. Create new\n");
+      System.out.println("2. Create new");
+      System.out.println("3. Test Assignment\n");
   
       while (true) { //file selection
         System.out.print("Enter choice: ");
         String choice = strInput.nextLine();
     
-        if (choice.equals("1")) { //open exiisting file
+        if (choice.equals("1")) { //open existing file
           System.out.print("Enter file name: ");
           fileName = strInput.nextLine();
           try {
@@ -84,6 +85,14 @@ public class Main {
             e.printStackTrace();
           }
         }
+        else if (choice.equals("3")) {
+          mode = "auto";
+          break;
+        }
+        else {
+          System.out.println("Invalid Input\n");
+        }
+
       }
       System.out.print("\033[H\033[2J");
       System.out.flush();
@@ -132,11 +141,32 @@ public class Main {
         }
   
         if (action.equals("add")) {
+          ArrayList<String> cabin_names = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux-Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
+          ArrayList<String> short_cabin_names = new ArrayList<String>(Arrays.asList("Highland", "River West", "Coaldale", "Gem", "Lendrum", "Vaux", "Linden", "Dalhousie", "Crestwood", "Sun West"));
           System.out.print("\033[H\033[2J");
           System.out.print("Camper Name: ");
           String name = strInput.nextLine();
-          System.out.print("Camper Cabin: ");
-          String cabin = strInput.nextLine();
+
+          String cabin = "";
+
+          while (true) {
+            System.out.print("Camper Cabin: ");
+            cabin = strInput.nextLine();
+
+            cabin = Lib.capitalize(cabin);
+
+            if (cabin_names.contains(cabin)) {
+              break;
+            }
+            else if (short_cabin_names.contains(cabin)) {
+              cabin = cabin_names.get(short_cabin_names.indexOf(cabin));
+              break;
+            }
+            else {
+              System.out.println("\nCabin does not exist\n");
+            }
+            
+          }
           Camper camper = new Camper(name, cabin);
   
           while (true) {
@@ -193,24 +223,22 @@ public class Main {
       }
     }
     else {
-      ArrayList<String> camper_names = new ArrayList<String>(Arrays.asList("John", "Mark", "Luke", "Matthew", "Rachel", "Sarah", "Jack", "James", "Kate", "David", "Mary", "Max", "Susie", "Jessica", "Derek", "Lisa", "Amy", "Josh", "Jacob", "Jenny", "Paul", "Noah", "Liam", "Olivia", "Emma", "Oliver", "Ava", "Charlotte", "Elijah", "Sophia", "Aiden", "Isabella", "Mia", "Ethan", "Madison", "Luna", "William", "Abigail", "Harper", "Mason", "Evelyn", "Emily", "Elizabeth", "Avery", "Ella", "Scarlett", "Grace", "Peter", "Susan", "Edmund", "Lucy", "Nora", "Aaron", "Chloe", "Hannah", "Joseph", "Harry", "Ron", "Jane", "Jude", "Jordan", "Katherine", "Michael", "Morgan", "Amelia", "Evan", "Victoria", "Aria", "Anthony", "Eli", "Kayla", "Jeremy", "Kimberly", "Justin", "Samantha", "Dylan", "Aubrey", "Natalie", "Samuel", "Zoe", "Leo", "Mackenzie", "Alexander", "Addison", "Kylie", "Jason", "Ariana", "Elias", "Alice", "Ezra", "Maya", "Asher", "Audrey", "Caleb", "Bella", "Levi", "Aurora", "Jaxon", "Stella", "Nicholas"));
+      ArrayList<String> camper_names = new ArrayList<String>(Arrays.asList("Adam", "Benjamin", "Caleb", "Daniel", "Ethan", "Finn", "Gabriel", "Henry", "Isaac", "Jacob", "Liam", "Mason", "Noah", "Oliver", "Peter", "Quinn", "Ryan", "Samuel", "Theodore", "Uriel", "Vincent", "William", "Xavier", "Yusuf", "Zachary", "Andrew", "Bryce", "Christopher", "David", "Elijah", "Felix", "George", "Harrison", "Ian", "Joseph", "Kevin", "Lucas", "Matthew", "Nathan", "Oscar", "Patrick", "Raymond", "Simon", "Thomas", "Victor", "Wyatt", "Xander", "Yosef", "Zane", "Marcus", "Abigail", "Bella", "Charlotte", "Daisy", "Emma", "Faith", "Grace", "Hannah", "Isabella", "Julia", "Kate", "Lily", "Mia", "Nora", "Olivia", "Penelope", "Quinn", "Rachel", "Sophia", "Taylor", "Amy", "Violet", "Willow", "Mindy", "Yara", "Zara", "Amelia", "Brooklyn", "Chloe", "Diana", "Eleanor", "Fiona", "Georgia", "Hazel", "Ivy", "Jasmine", "Katherine", "Luna", "Madison", "Natalie", "Ophelia", "Poppy", "Riley", "Samantha", "Tessa", "Grace", "Victoria", "Wendy", "Raya", "Zoe"));
 
       //ArrayList<String> camper_names = new ArrayList<String>(Arrays.asList("John", "Matthew", "Luke", "Mark", "Rachel", "Sarah", "Jack"));
 
       //ArrayList<String> camper_names = new ArrayList<String>(Arrays.asList("001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011", "012", "013", "014", "015", "016", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027", "028", "029", "030", "031", "032", "033", "034", "035", "036", "037", "038", "039", "040", "041", "042", "043", "044", "045", "046", "047", "048", "049", "050", "051", "052", "053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065", "066", "067", "068", "069", "070", "071", "072", "073", "074", "075", "076", "077", "078", "079", "080", "081", "082", "083", "084", "085", "086", "087", "088", "089", "090", "091", "092", "093", "094", "095", "096", "097", "098", "099", "100"));
 
-      int iterations = 1;
-
-      if (mode.equals("test")) {
-        iterations = 500;
-      }
+      ArrayList<String> cabins = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux-Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
 
       boolean end = false;
 
       int a = 0;
       while (true) {
         a++;
-        System.out.println("Iteration " + a);
+        if (mode.equals("test")) {
+          System.out.println("Iteration " + a);
+        }
         campers = new ArrayList<Camper>();
         activities = new ArrayList<Activity>();
 
@@ -219,7 +247,7 @@ public class Main {
         }
         
         for (int i = 0; i < camper_names.size(); i++) {
-          Camper camper = new Camper(camper_names.get(i), "Cabin");
+          Camper camper = new Camper(camper_names.get(i), cabins.get(i/10));
           ArrayList<Integer> activity_choices = new ArrayList<Integer>();
   
           for (int ii = 0; ii < activities.size(); ii++) {
@@ -249,13 +277,9 @@ public class Main {
           }
     
           campers.add(camper);
-
-          if (mode.equals("auto")) {
-            System.out.println(camper.name + ": " + camper.choices + "\n");
-          }
         }
   
-        Assign Activity_assigner = new Assign(campers, activities);
+        new Assign(campers, activities);
         
         Lib.setActivities(campers, activities); //set campers' activities
 
@@ -269,54 +293,19 @@ public class Main {
             }
           }
         }
-
-        ArrayList<Double> satisfaction_stats = Lib.satisfactionStats(campers);
-        System.out.println("Average satisfaction: " + satisfaction_stats.get(0) + "  Minimum satisfaction: " + satisfaction_stats.get(1));
         
         if (mode.equals("auto") || end == true) {
           break;
         }
       }
 
-      System.out.println("Done");
-
       if (mode.equals("test")) {
         for (Camper camper : campers) {
           System.out.println(camper.name + ": " + camper.choices + "\n");
         }
       }
-      
-      for (Activity activity : activities) {
-        System.out.println("\n\u001B[32m" + activity.name + "\u001B[0m");
-        for (int i = 0; i < activity.campers.size(); i++) {
-          System.out.print("\u001B[34m" + "day " + (i + 1) + "\u001B[0m " + activity.campers.get(i).size() + " campers ");
-          if (activity.campers.get(i).size() > activity.capacity) {
-            System.out.println("\u001B[31m" + "FULL - " + (activity.campers.get(i).size() - activity.capacity) + " over\u001B[0m");
-          }
-          else {
-            System.out.println("");
-          }
-          if (activity.days_open[i] == false) {
-            System.out.println("\u001B[31m   Closed  \u001B[0m");
-          }
-          for (int ii = 0; ii < activity.campers.get(i).size(); ii++) {
-            System.out.println("   " + activity.campers.get(i).get(ii).name);
-          }
-          System.out.println("");
-        }
-      }
 
-      for (Camper camper : campers) {
-        System.out.println("\n" + camper.name);
-        for (int i = 0; i < 4; i++) {
-          if (camper.activities.get(i) != null) {
-            System.out.println("day " + (i + 1) + ": " + camper.activities.get(i).name + "  choice: " + camper.choices.get(camper.activities.get(i).name));
-          }
-          else {
-            System.out.println("day " + (i + 1) + ":\u001B[31m no activity \u001B[0m");
-          }
-        }
-      }
+      Assign.display(campers, activities);
     }
   }
 }

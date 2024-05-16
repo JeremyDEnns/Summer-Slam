@@ -382,6 +382,10 @@ public class Assign {
 
       int max = Lib.maxCampers(activity.campers);
 
+      if (max == 0) {
+          max = 1;
+        }
+
       for (int i = 0; i < max; i++) {
         for (int ii = 0; ii < 4; ii++) {
           if (i < activity.campers.get(ii).size()) {
@@ -455,6 +459,10 @@ public class Assign {
         writer.printf("%-29s %-29s %-29s %-29s %n %n", "Monday", "Tuesday", "Wednesday", "Thursday");
 
         int max = Lib.maxCampers(activity.campers);
+
+        if (max == 0) {
+          max = 1;
+        }
 
         for (int i = 0; i < max; i++) {
           for (int ii = 0; ii < 4; ii++) {

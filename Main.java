@@ -3,12 +3,29 @@ import java.io.*;
 import java.nio.file.*;
 
 public class Main {
+  public boolean[][] open_days;
   public static void main(String[] args) {
     Scanner strInput = new Scanner(System.in);
     Scanner intInput = new Scanner(System.in);
 
     ArrayList<Camper> campers = new ArrayList<Camper>();
     ArrayList<Activity> activities = new ArrayList<Activity>();
+
+    boolean[][] open_days = {{true, true, true, true},  //zipline
+                            {true, true, false, true}, //trail ride
+                            {true, true, true, true}, //climbing wall
+                            {true, true, false, true}, //bazooka ball
+                            {true, true, true, true}, //canoeing
+                            {true, true, true, true}, //archery
+                            {true, false, true, false}, //willsonball
+                            {false, true, false, false}, //Disc Golf
+                            {false, false, true, false}, //board games
+                            {true, false, false, true}, //bracelet making
+                            {false, false, true, false}, //volleyball
+                            {false, false, false, true}, //basketball
+                            {false, true, false, false}, //soccer
+                            {false, true, true, true}, //shower time
+                            {true, false, true, false}}; //quiet time
 
     File save_file = new File("");
 
@@ -24,10 +41,6 @@ public class Main {
     }
     
     String[] activity_list = {"Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"};
-
-    for (int i = 0; i < activity_list.length; i++) {
-      activities.add(new Activity(activity_list[i]));
-    }
 
     String mode = "manual";
 
@@ -58,6 +71,7 @@ public class Main {
               System.out.println("Loading campers...");
   
               campers = Lib.load(fileName);
+              open_days = Lib.loadDays(fileName);
   
               for (int i = 0; i < 7; i++) {
                 System.out.print(String.format("\033[%dA",1)); // Move up
@@ -86,6 +100,8 @@ public class Main {
               camper_folder.mkdir();
               File activity_folder = new File("Saves/" + fileName + "/Activities");
               activity_folder.mkdir();
+
+              Lib.save(fileName, campers, open_days);
               break;
             }
             else {
@@ -105,49 +121,62 @@ public class Main {
         }
 
       }
-      System.out.print("\033[H\033[2J");
+      //System.out.print("\033[H\033[2J");
       System.out.flush();
+    }
+
+    for (int i = 0; i < activity_list.length; i++) {
+      activities.add(new Activity(activity_list[i], open_days));
     }
 
     //entering data
 
     if (mode.equals("manual")) {
       while (true) {
-        System.out.print("\033[H\033[2J");
+        //System.out.print("\033[H\033[2J");
         System.out.flush();
         String action = "add";
-        if (campers.size() > 0) {
-          System.out.println("1. Add camper");
-          System.out.println("2. Edit camper");
-          System.out.println("3. Remove camper");
-          System.out.println("4. Complete and assign activities");
+        System.out.println("1. Add camper");
+        System.out.println("2. Edit camper");
+        System.out.println("3. Remove camper");
+        System.out.println("4. Complete and assign activities");
+        System.out.println("5. Import Campers");
+        System.out.println("6. Settings");
+        
+
+        while (true) {
+          System.out.print("\nSelect Option: ");
   
-          while (true) {
-            System.out.print("\nSelect Option: ");
-    
-            String choice = strInput.nextLine();
-  
-            if (choice.equals("1")) {
-              action = "add";
+          String choice = strInput.nextLine();
+
+          if (choice.equals("1")) {
+            action = "add";
+            break;
+          }
+          else if (choice.equals("2")) {
+            action = "edit";
+            break;
+          }
+          else if (choice.equals("3")) {
+            action = "remove";
+            break;
+          }
+          else if (choice.equals("4")) {
+            System.out.print("\nAre you sure you want to complete and assign activities? (y/n): ");
+            String confirm = strInput.nextLine();
+
+            if (confirm.equals("y")) {
+              action = "assign";
               break;
             }
-            else if (choice.equals("2")) {
-              action = "edit";
-              break;
-            }
-            else if (choice.equals("3")) {
-              action = "remove";
-              break;
-            }
-            else if (choice.equals("4")) {
-              System.out.print("\nAre you sure you want to complete and assign activities? (y/n): ");
-              String confirm = strInput.nextLine();
-  
-              if (confirm.equals("y")) {
-                action = "assign";
-                break;
-              }
-            }
+          }
+          else if (choice.equals("5")) {
+            action = "import";
+            break;
+          }
+          else if (choice.equals("6")) {
+            action = "settings";
+            break;
           }
         }
   
@@ -191,7 +220,7 @@ public class Main {
     
             if (!choice.equals("2")) {
               campers.add(camper);
-              Lib.save(fileName, campers);
+              Lib.save(fileName, campers, open_days);
               System.out.println("");
               break;
             }
@@ -214,7 +243,7 @@ public class Main {
               break;
             }
           }
-          Lib.save(fileName, campers);
+          Lib.save(fileName, campers, open_days);
         }
         else if (action.equals("remove")) {
           Camper camper_choice = Lib.selectCamper(campers);
@@ -225,13 +254,122 @@ public class Main {
           if (confirm.equals("y")) {
             campers.remove(camper_choice);
           }
-          Lib.save(fileName, campers);
+          Lib.save(fileName, campers, open_days);
         }
         else if (action.equals("assign")) {
           new Assign(campers, activities);
           Assign.display(campers, activities);
           Assign.saveAssignments(fileName, campers, activities);
           break;
+        }
+        else if (action.equals("import")) {
+          System.out.print("File name: ");
+
+          String file_name = strInput.nextLine();
+
+          if (file_name.length() > 4) {
+            if (!file_name.substring(file_name.length()-4).equals(".csv")) {
+              file_name += ".csv";
+            }
+          }
+          else {
+            file_name += ".csv";
+          }
+          
+          try {
+            File import_file = new File(file_name);
+
+            if (import_file.exists()) {
+              Scanner fileReader = new Scanner(import_file);
+
+              while (fileReader.hasNextLine()) {
+                String camper_line = fileReader.nextLine();
+
+                String[] camper_data = camper_line.split(",");
+
+                if (!Lib.capitalize(camper_data[0]).equals("Name")) {
+                  Camper new_camper = new Camper(camper_data[0], camper_data[1]);
+
+                  for (int i = 2; i <= 9; i++) {
+                    new_camper.setChoice(camper_data[2], i-1);
+                  }
+                  campers.add(new_camper);
+                }
+              }
+              fileReader.close();
+            }
+            else {
+              System.out.println("File does not exist\n");
+            }
+
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+        else if (action.equals("settings")) {
+          int choice = 0;
+
+          String green_code = "\u001B[32m";
+          String red_code = "\u001B[31m";
+          String reset_code = "\u001B[0m";
+
+          while (true) {
+            System.out.print("\033[H\033[2J");
+
+            for (int i = 0; i < activities.size(); i++) {
+              System.out.print((i + 1) + ". " + activities.get(i).name + "   ");
+              for (int ii = 0; ii < 4; ii++) {
+                if (activities.get(i).days_open[ii]) {
+                  System.out.print(green_code + "open  ");
+                }
+                else {
+                  System.out.print(red_code + "closed  ");
+                }
+
+                System.out.print(reset_code);
+              }
+              System.out.println();
+            }
+            System.out.println();
+
+            System.out.print("Select day to adjust: ");
+
+            choice = 0;
+
+            try {
+              choice = intInput.nextInt() - 1;
+              break;
+            }
+            catch (Exception e) {
+              continue;
+            }
+          }
+
+          Activity selected_activity = activities.get(choice);
+
+          System.out.println("Select open/closed\n");
+
+          for (int i = 0; i < 4; i++) {
+            while (true) {
+              System.out.print("Day " + (i + 1) + ": ");
+
+              String open_choice = strInput.nextLine();
+
+              if (open_choice.equals("open")) {
+                selected_activity.days_open[i] = true;
+                break;
+              }
+              else if (open_choice.equals("closed")) {
+                selected_activity.days_open[i] = false;
+                break;
+              }
+              else {
+                System.out.println("Invalid Input\n");
+              }
+            }
+          }
+          Lib.save(fileName, campers, open_days);
         }
       }
     }
@@ -256,7 +394,7 @@ public class Main {
         activities = new ArrayList<Activity>();
 
         for (int i = 0; i < activity_list.length; i++) {
-          activities.add(new Activity(activity_list[i]));
+          activities.add(new Activity(activity_list[i], open_days));
         }
         
         for (int i = 0; i < camper_names.size(); i++) {

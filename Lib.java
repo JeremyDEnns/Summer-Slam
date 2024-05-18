@@ -235,7 +235,7 @@ public class Lib {
     return satisfaction_scores;
   }
 
-  public static void save(String file_name, ArrayList<Camper> campers) {
+  public static void save(String file_name, ArrayList<Camper> campers, boolean[][] open_days) {
     String[] activity_list = new String[]{"Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"};
     
     File camper_folder = new File("Saves/" + file_name + "/Campers");
@@ -244,6 +244,29 @@ public class Lib {
 
     for (File file : camper_files) {
       file.delete(); //deletes all campers from folder
+    }
+
+    try {
+      File variable_file = new File("Saves/" + file_name + "/Variables.txt");
+
+      variable_file.createNewFile();
+
+      FileWriter writer = new FileWriter(variable_file);
+
+      writer.write("Open days: ");
+
+      for (int i = 0; i < open_days.length; i++) {
+        writer.write(open_days[i][0] + ",");
+        writer.write(open_days[i][1] + ",");
+        writer.write(open_days[i][2] + ",");
+        writer.write(open_days[i][3] + ", ");
+      }
+
+      writer.close();
+
+    }
+    catch (Exception e) {
+      e.printStackTrace();
     }
     
     try {
@@ -269,6 +292,38 @@ public class Lib {
     catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public static boolean[][] loadDays(String file_name) {
+    boolean[][] open_days = {{true, true, true, true},{true, true, false, true},{true, true, true, true},{true, true, false, true},{true, true, true, true},{true, true, true, true},{true, false, true, false},{false, true, false, false},{false, false, true, false},{true, false, false, true},{false, false, true, false},{false, false, false, true},{false, true, false, false},{false, true, true, true},{true, false, true, false}};
+
+    try {
+      File variable_file = new File("Saves/" + file_name + "/Variables.txt");
+
+      Scanner file_reader = new Scanner(variable_file);
+
+      String days_string = file_reader.nextLine().split(": ")[1];
+
+      String[] activity_days = days_string.split(", ");
+
+      for (int i = 0; i < activity_days.length; i++) {
+        String[] activity_day = activity_days[i].split(",");
+
+        for (int ii = 0; ii < activity_day.length; ii++) {
+          if (activity_day[ii].equals("true")) {
+            open_days[i][ii] = true;
+          }
+          else if (activity_day[ii].equals("false")) {
+            open_days[i][ii] = false;
+          }
+        }
+      }
+      file_reader.close();
+    }
+    catch (Exception e) {
+    }
+    return open_days;
+
   }
 
   public static ArrayList<Camper> load(String file_name) {

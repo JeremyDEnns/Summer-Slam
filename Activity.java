@@ -9,7 +9,7 @@ public class Activity {
   public ArrayList<ArrayList<Camper>> campers;
   public ArrayList<Integer> day_demand;
 
-  public Activity(String set_name) {
+  public Activity(String set_name, boolean[][] set_days) {
     name = set_name;
     capacity = 0;
     days_open = new boolean[4];
@@ -21,22 +21,6 @@ public class Activity {
     String[] activity_list = {"Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"};
 
     int[] capacities = {14, 12, 14, 14, 14, 14, 16, 20, 20, 20, 20, 20, 20, 16, 16};
-
-    boolean[][] set_days = {{true, true, true, true},  //zipline
-                            {true, true, false, true}, //trail ride
-                            {true, true, true, true}, //climbing wall
-                            {true, true, false, true}, //bazooka ball
-                            {true, true, true, true}, //canoeing
-                            {true, true, true, true}, //archery
-                            {true, false, true, false}, //willsonball
-                            {false, true, false, false}, //Disc Golf
-                            {false, false, true, false}, //board games
-                            {true, false, false, true}, //bracelet making
-                            {false, false, true, false}, //volleyball
-                            {false, false, false, true}, //basketball
-                            {false, true, false, false}, //soccer
-                            {false, true, true, true}, //shower time
-                            {true, false, true, false}}; //quiet time
 
     for (int i = 0; i < activity_list.length; i++) {
       if (activity_list[i].equals(name)) {
@@ -71,4 +55,6 @@ public class Activity {
     }
   }
   
+}
+
 }

@@ -35,6 +35,12 @@ public class Main {
       if (!save_folder.exists()) {
         save_folder.mkdir();
       }
+
+      File import_folder = new File("Imports");
+
+      if (!import_folder.exists()) {
+        import_folder.mkdir();
+      }
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -210,7 +216,7 @@ public class Main {
           Camper camper = new Camper(name, cabin);
   
           while (true) {
-            camper.choices = Lib.chooseActivities(name, cabin);
+            camper.choices = Lib.chooseActivities(name, cabin, new ArrayList<Integer>());
             
             System.out.println("\n1. Continue");
             System.out.println("2. Redo Selections\n");
@@ -230,7 +236,12 @@ public class Main {
           Camper camper_choice = Lib.selectCamper(campers);
   
           while (true) {
-            camper_choice.choices = Lib.chooseActivities(camper_choice.name, camper_choice.cabin);
+            ArrayList<Integer> previous_choices = new ArrayList<Integer>();
+            for (String i : activity_list) {
+              previous_choices.add(camper_choice.choices.get(i));
+            }
+
+            camper_choice.choices = Lib.chooseActivities(camper_choice.name, camper_choice.cabin, previous_choices);
   
             System.out.println("\n1. Continue");
             System.out.println("2. Redo Selections\n");
@@ -263,6 +274,7 @@ public class Main {
           break;
         }
         else if (action.equals("import")) {
+
           System.out.print("File name: ");
 
           String file_name = strInput.nextLine();
@@ -277,7 +289,7 @@ public class Main {
           }
           
           try {
-            File import_file = new File(file_name);
+            File import_file = new File("Imports/" + file_name);
 
             if (import_file.exists()) {
               Scanner fileReader = new Scanner(import_file);
@@ -288,13 +300,29 @@ public class Main {
                 String[] camper_data = camper_line.split(",");
 
                 if (!Lib.capitalize(camper_data[0]).equals("Name")) {
-                  Camper new_camper = new Camper(camper_data[0], camper_data[1]);
+                  String cabin = camper_data[1];
+                  Lib.correctSpelling(cabin, 0, camper_data[0]);
+
+                  Camper new_camper = new Camper(camper_data[0], cabin);
+
+                  for (String i : activity_list) {
+                    new_camper.choices.put(i, 0);
+                  }
 
                   for (int i = 2; i <= 9; i++) {
-                    new_camper.setChoice(camper_data[2], i-1);
+                    String activity = "";
+                    if (camper_data.length > i) {
+                      activity = Lib.correctSpelling(camper_data[i], i-1, new_camper.name);
+                    }
+                    else {
+                      activity = Lib.correctSpelling(" ", i-1, new_camper.name);
+                    }
+
+                    new_camper.setChoice(activity, i-1);
                   }
                   campers.add(new_camper);
                 }
+                Lib.save(fileName, campers, open_days);
               }
               fileReader.close();
             }

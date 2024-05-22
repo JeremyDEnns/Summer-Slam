@@ -12,6 +12,8 @@ public class Lib {
 
     int choice_selection = 0;
 
+    Scanner strInput = new Scanner(System.in);
+
     while (choice_selection < activity_list.length) {
       if (reset) {
         reset = false;
@@ -26,8 +28,6 @@ public class Lib {
       }
 
       int choice = 0;
-
-      Scanner strInput = new Scanner(System.in);
 
       if (previous_choices.size() > choice_selection) {
         System.out.println("\nPrevious choice: " + previous_choices.get(choice_selection));
@@ -75,6 +75,10 @@ public class Lib {
           System.out.println("\n");
         }
       }
+      System.out.print("\nPress enter to continue: ");
+      String cont = strInput.nextLine();
+      
+      choices = chooseActivities(name, cabin, previous_choices);
     }
     return choices;
   } 
@@ -388,8 +392,10 @@ public class Lib {
     String new_text = "";
     String[] words = text.split(" ");
     for (int i = 0; i < words.length; i++) {
-      new_text += words[i].substring(0, 1).toUpperCase();
-      new_text += words[i].substring(1).toLowerCase();
+      if (words[i].length() > 1) {
+        new_text += words[i].substring(0, 1).toUpperCase();
+        new_text += words[i].substring(1).toLowerCase();
+      }
       if (i < words.length - 1) {
         new_text += " ";
       }

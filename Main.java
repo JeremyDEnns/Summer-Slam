@@ -300,31 +300,61 @@ public class Main {
                 String[] camper_data = camper_line.split(",");
 
                 if (!Lib.capitalize(camper_data[0]).equals("Name")) {
-                  String cabin = camper_data[1];
-                  Lib.correctSpelling(cabin, 0, camper_data[0]);
+                String cabin = camper_data[1];
+                Lib.correctSpelling(cabin, 0, camper_data[0]);
 
-                  Camper new_camper = new Camper(camper_data[0], cabin);
+                Camper new_camper = new Camper(camper_data[0], cabin);
 
-                  for (String i : activity_list) {
-                    new_camper.choices.put(i, 0);
+                for (String i : activity_list) {
+                  new_camper.choices.put(i, 0);
+                }
+
+                for (int i = 2; i <= 9; i++) {
+                  String activity = "";
+                  if (camper_data.length > i) {
+                    activity = Lib.correctSpelling(camper_data[i], i-1, new_camper.name);
+                  }
+                  else {
+                    activity = Lib.correctSpelling(" ", i-1, new_camper.name);
                   }
 
-                  for (int i = 2; i <= 9; i++) {
-                    String activity = "";
-                    if (camper_data.length > i) {
-                      activity = Lib.correctSpelling(camper_data[i], i-1, new_camper.name);
+                  new_camper.setChoice(activity, i-1);
+                }
+
+                ArrayList<String> missing_choices = new ArrayList<String>(Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8"));
+
+                ArrayList<Integer> previous_choices = new ArrayList<Integer>();
+
+                for (String i : activity_list) {
+                  previous_choices.add(new_camper.choices.get(i));
+                  if (new_camper.choices.get(i) > 0) {
+                    missing_choices.remove(Integer.toString(new_camper.choices.get(i)));
+                  }
+                }
+                if (missing_choices.size() > 0) {
+                  System.out.print("Missing choices ");
+                  for (int i = 0; i < missing_choices.size(); i++) {
+                    System.out.print(missing_choices.get(i));
+                    if (i < missing_choices.size() - 1) {
+                      System.out.print(", ");
                     }
                     else {
-                      activity = Lib.correctSpelling(" ", i-1, new_camper.name);
+                      System.out.println("\n");
                     }
-
-                    new_camper.setChoice(activity, i-1);
                   }
-                  campers.add(new_camper);
+
+                  System.out.print("Press enter to continue: ");
+
+                  String cont = strInput.nextLine();
+
+                  new_camper.choices = Lib.chooseActivities(new_camper.name, new_camper.cabin, previous_choices);
+
+                }
+
+                campers.add(new_camper);
                 }
                 Lib.save(fileName, campers, open_days);
               }
-              fileReader.close();
             }
             else {
               System.out.println("File does not exist\n");

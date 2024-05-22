@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Lib {
-  public static HashMap<String, Integer> chooseActivities(String name, String cabin) {
+  public static HashMap<String, Integer> chooseActivities(String name, String cabin, ArrayList<Integer> previous_choices) {
     HashMap<String, Integer> choices = new HashMap<String, Integer>();
 
     boolean reset = true;
@@ -29,8 +29,11 @@ public class Lib {
 
       Scanner strInput = new Scanner(System.in);
 
-      System.out.print(choice_selection + 1 + ". " + activity_list[choice_selection] + "  ");
+      if (previous_choices.size() > choice_selection) {
+        System.out.println("\nPrevious choice: " + previous_choices.get(choice_selection));
+      }
 
+      System.out.print(choice_selection + 1 + ". " + activity_list[choice_selection] + "  ");
 
       try {
         String choice_str = strInput.next();
@@ -59,6 +62,18 @@ public class Lib {
       else {
         System.out.println("Invalid Choice");
         reset = true;
+      }
+    }
+    if (choice_options.size() > 0) {
+      System.out.print("\nMissing choices ");
+      for (int i = 0; i < choice_options.size(); i++) {
+        System.out.print(choice_options.get(i));
+        if (i < choice_options.size() - 1) {
+          System.out.print(",");
+        }
+        else {
+          System.out.println("\n");
+        }
       }
     }
     return choices;
@@ -391,5 +406,81 @@ public class Lib {
       }
     }
     return max;
+  }
+
+  public static String correctSpelling(String word, int choice, String name) {
+    System.out.print("\033[H\033[2J");
+    word = capitalize(word);
+
+    ArrayList<String> cabin_names = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
+    ArrayList<String> short_cabin_names = new ArrayList<String>(Arrays.asList("Highland", "River West", "Coaldale", "Gem", "Lendrum", "Vaux", "Linden", "Dalhousie", "Crestwood", "Sun West"));
+
+    ArrayList<String> activity_list = new ArrayList<String>(Arrays.asList("Zip Line", "Trail Ride", "Climbing Wall", "Bazooka Ball", "Canoeing", "Archery", "Willson Ball", "Disc Golf", "Board Games", "Bracelet Making", "Volleyball", "Basketball", "Soccer", "Shower Time", "Quiet Time"));
+
+    if (activity_list.contains(word) || cabin_names.contains(word)) {
+      return word;
+    }
+    else if (word.equals("Zipline") || word.equals("Zilpine")) {
+      return "Zip Line";
+    }
+    else if (word.equals("Trailride")) {
+      return "Trail Ride";
+    }
+    else if (word.equals("Climbingwall")) {
+      return "Climbing Wall";
+    }
+    else if (word.equals("Bazookaball")) {
+      return "Bazooka Ball";
+    }
+    else if (word.equals("Canoing") || word.equals("Caneoing")) {
+      return "Canoeing";
+    }
+    else if (word.equals("Willsonball")) {
+      return "Willson Ball";
+    }
+    else if (word.equals("Discgolf") || word.equals("Disc Gold")) {
+      return "Disc Golf";
+    }
+    else if (word.equals("Boardgames")) {
+      return "Board Games";
+    }
+    else if (word.equals("Braceletmaking")) {
+      return "Bracelet Making";
+    }
+    else if (word.equals("Voleyball") || word.equals("Volleybal")) {
+      return "Volleyball";
+    }
+    else if (word.equals("Basketbal")) {
+      return "Basketball";
+    }
+    else if (word.equals("Socer")) {
+      return "Soccer";
+    }
+    else if (word.equals("Showertime")) {
+      return "Shower Time";
+    }
+    else if (word.equals("Quiettime") || word.equals("Quietime")) {
+      return "Quiet Time";
+    }
+    else if (short_cabin_names.contains(word)) {
+      return cabin_names.get(short_cabin_names.indexOf(word));
+    }
+    else {
+      System.out.println("\033[H\033[2J" + name);
+      if (choice > 0) {
+        System.out.println("Choice: " + choice);
+      }
+      System.out.println();
+
+      System.out.println("You entered: " + word);
+      System.out.print("Correct choice: ");
+
+      Scanner Input = new Scanner(System.in);
+      word = Input.nextLine();
+      
+      word = correctSpelling(word, choice, name);
+
+      return word;
+    }
   }
 }

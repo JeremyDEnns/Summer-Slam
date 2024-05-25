@@ -54,5 +54,4 @@ public class Activity {
       day_demand.add((int) demand_score);
     }
   }
-  
 }

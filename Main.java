@@ -345,7 +345,7 @@ public class Main {
 
                   System.out.print("Press enter to continue: ");
 
-                  String cont = strInput.nextLine();
+                  strInput.nextLine();
 
                   new_camper.choices = Lib.chooseActivities(new_camper.name, new_camper.cabin, previous_choices);
 

@@ -425,7 +425,6 @@ public class Assign {
       }
       System.out.println();
     }
-
   }
 
   public static void saveAssignments (String saveFile, ArrayList<Camper> campers, ArrayList<Activity> activities) {
@@ -438,7 +437,7 @@ public class Assign {
       String file_name = "";
 
       while (true) { //creates
-        file_name = "Saves/" + saveFile + "/" + saveFile + "_Activities";
+        file_name = "Saves/" + saveFile + "/" + saveFile + "Activities";
         if (file_num > 0) {
           file_name += file_num;
         }

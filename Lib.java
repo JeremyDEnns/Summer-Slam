@@ -415,7 +415,7 @@ public class Lib {
   }
 
   public static String correctSpelling(String word, int choice, String name) {
-    System.out.print("\033[H\033[2J");
+    //System.out.print("\033[H\033[2J");
     word = capitalize(word);
 
     ArrayList<String> cabin_names = new ArrayList<String>(Arrays.asList("Highland House", "Riverwest", "Coaldale Cottage", "Gem Abode", "Lendrum Lodge", "Vaux Hollow", "Linden Hut", "Dalhousie Den", "Crestwood Chalet", "Sunwest"));
@@ -472,8 +472,9 @@ public class Lib {
       return cabin_names.get(short_cabin_names.indexOf(word));
     }
     else {
-      System.out.println("\033[H\033[2J" + name);
+      System.out.println("\033[H\033[2J");
       if (choice > 0) {
+        System.out.println("Name: " + name);
         System.out.println("Choice: " + choice);
       }
       System.out.println();

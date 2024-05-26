@@ -473,9 +473,12 @@ public class Lib {
     }
     else {
       System.out.println("\033[H\033[2J");
+      System.out.println("Name: " + name);
       if (choice > 0) {
-        System.out.println("Name: " + name);
         System.out.println("Choice: " + choice);
+      }
+      else {
+        System.out.println("Cabin Input");
       }
       System.out.println();
 
